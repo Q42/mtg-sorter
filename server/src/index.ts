@@ -12,6 +12,12 @@ export default class Server {
       // await esp.send(req.params.msg);
       res.json({ status: "ok", message: req.params.msg });
     });
+
+    app.post("/", async (req, res) => {
+      console.log("Sending", req.body.msg);
+      // await esp.send(req.body);d
+      res.json({ status: "ok", message: req.body.msg });
+    });
   }
 
   private config(app: Application): void {
