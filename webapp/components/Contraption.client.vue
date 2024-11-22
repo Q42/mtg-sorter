@@ -6,6 +6,7 @@ const props = defineProps(['contraption'])
   <div>
     <p>Current Pile: {{ contraption.currentPile }}</p>
     <p>In the air: {{ contraption.cardInTheAir }}</p>
+    <p>Total value: ${{ contraption.totalPrice }}</p>
     <ul class="piles">
       <li :class="`pile ${ props.contraption.currentPile === pile.index ? 'active' : '' }`" v-for="pile in props.contraption.piles">
         <h3>Pile {{  pile.index }} ({{ pile.cards.length }})</h3>

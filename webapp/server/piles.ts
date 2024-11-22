@@ -4,6 +4,46 @@ import { whatCardIsInFrontOfTheCamera } from "./ocr";
 
 export type COLOR = "G" | "U" | "W" | "B" | "R";
 
+export function getPrice(data: any) {
+  const date = "2024-11-21";
+  const paper = data?.price?.paper;
+  console.log("paper", paper);
+  if (!paper) return null;
+  const prices: { currency: string; price: number }[] = [];
+
+  for (const key2 of Object.keys(paper)) {
+    const pp = paper[key2];
+    console.log("pp", pp);
+    const { currency } = pp;
+    const price = pp.retail?.normal?.[date] ?? pp.buylist?.normal?.[date];
+    console.log("price", price);
+    if (price) {
+      prices.push({ currency, price });
+    }
+  }
+
+  if (prices.length < 1) {
+    for (const key2 of Object.keys(paper)) {
+      const pp2 = paper[key2];
+      console.log("pp2", pp2);
+      const { currency } = pp2;
+      const price = pp2.retail?.foil?.[date] ?? pp2.buylist?.foil?.[date];
+      console.log("price", price);
+      if (price) {
+        prices.push({ currency, price });
+      }
+    }
+  }
+
+  if (prices.length > 1) {
+    console.log("Multiple prices", prices);
+    // sort by price desc
+    prices.sort((a, b) => b.price - a.price);
+  }
+
+  return prices[0];
+}
+
 export class Card {
   private data: any = {};
 
@@ -16,6 +56,7 @@ export class Card {
       );
     }
     this.data = data;
+    return this;
   }
 
   get isKnown() {
@@ -30,6 +71,10 @@ export class Card {
     const colors = (this.data.colorIdentity ?? []) as COLOR[];
     if (colors.length !== 1) return null;
     return colors[0];
+  }
+
+  get price() {
+    return getPrice(this.data);
   }
 
   get colorName() {
@@ -82,6 +127,13 @@ export class Contraption {
   cardInTheAir: Card | undefined = undefined;
 
   constructor(public piles: Pile[], public esp: ESP) {}
+
+  get allCards() {
+    return [
+      ...this.piles.flatMap((pile) => pile.cards),
+      this.cardInTheAir,
+    ].filter(Boolean);
+  }
 
   getPileForColor(color: COLOR | null | undefined) {
     if (!color) return this.piles.length - 1;
@@ -150,6 +202,13 @@ export class Contraption {
     return {
       currentPile: this.currentPileIndex,
       cardInTheAir: this.cardInTheAir?.toString(),
+      totalPrice: this.allCards.reduce((acc, card) => {
+        const price = card?.price;
+        if (price) {
+          acc += price.price;
+        }
+        return acc;
+      }, 0),
       piles: this.piles.map((pile, i) => ({
         index: i,
         cards: pile.cards.map((card, j) => ({
