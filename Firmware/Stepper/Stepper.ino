@@ -94,6 +94,15 @@ shell_command_entry     sStepperArmCommand =
     NULL
 };
 
+shell_command_entry     sStepperPlateCommand =
+{
+    "plate",
+    cmd_plate,
+    "plate - Control the base plate.",
+    "Usage: plate <state>\r\n"
+    "Arguments: ??",
+    NULL
+};
 
 
 void setup()
@@ -117,6 +126,7 @@ void setup()
   shell_register_command( &sHelpShortcut );
   shell_register_command( &sPumpCommand );
   shell_register_command( &sStepperArmCommand );
+  shell_register_command( &sStepperPlateCommand );
 }
 
 void loop()
@@ -200,6 +210,13 @@ int cmd_arm( int argc, char** argv)
   return SHELL_RET_SUCCESS;
 }
 
+int cmd_plate( int argc, char** argv) 
+{
+  int8_t     u8PumpVal = 0;
+  u8PumpVal = (int8_t)lEvaluateArg( argv[1], -200, 200, NULL );
+  stepperPlate.step( u8PumpVal );
+  return SHELL_RET_SUCCESS;
+}
 
 /******************************************************************************
  * Global functions
