@@ -1,6 +1,6 @@
-import { getCard } from "./cards";
+import { getCard, getRandomCardName } from "./cards";
 import { ESP } from "./esp";
-import { mockCardList, whatCardIsInFrontOfTheCamera } from "./ocr";
+import { whatCardIsInFrontOfTheCamera } from "./ocr";
 
 export type COLOR = "G" | "U" | "W" | "B" | "R";
 
@@ -129,7 +129,7 @@ export class Contraption {
   async determineCard() {
     console.log("Determining card on pile", this.currentPileIndex);
     // const name = await whatCardIsInFrontOfTheCamera();
-    const name = mockCardList[Math.floor(Math.random() * mockCardList.length)]; // TODO FOR NOW
+    const name = getRandomCardName(); // TODO FOR NOW
 
     if (!name) {
       this.currentPile.isEmpty();

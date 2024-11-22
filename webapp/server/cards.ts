@@ -11,9 +11,7 @@ function normalize(input: string) {
     .trim();
 }
 
-export function getCard(cardName: string) {
-  if (!cardName) return null;
-
+function fillCardsArray() {
   if (cardsArray.length === 0) {
     const cardsData = fs.readFileSync("./server/data/AtomicCards.json", "utf8");
     const cardsJson = JSON.parse(cardsData);
@@ -22,6 +20,18 @@ export function getCard(cardName: string) {
     );
     console.log(`Cards loaded: ${cardsArray.length}`);
   }
+}
+
+export function getRandomCardName() {
+  fillCardsArray();
+
+  return cardsArray[Math.floor(Math.random() * cardsArray.length)].name;
+}
+
+export function getCard(cardName: string) {
+  if (!cardName) return null;
+
+  fillCardsArray();
 
   return cardsArray.find((card) => {
     try {
