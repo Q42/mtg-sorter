@@ -2,8 +2,8 @@ import { Server as Engine } from "engine.io";
 import { Server } from "socket.io";
 import { defineEventHandler } from "h3";
 import { whatCardIsInFrontOfTheCamera } from "../ocr";
-import { getCard } from "../cards";
-import { Contraption, Pile } from "../piles";
+import { getCard, getRandomCardName } from "../cards";
+import { Card, Contraption, Pile } from "../piles";
 import { ESP } from "../esp";
 
 let currentContraption: Contraption | undefined;
@@ -36,9 +36,15 @@ export default defineNitroPlugin((nitroApp) => {
       console.log("received message", data);
 
       if (data === "what-card") {
-        const cardName = await whatCardIsInFrontOfTheCamera();
+        // const cardName = await whatCardIsInFrontOfTheCamera();
+        const cardName = getRandomCardName();
         const card = getCard(cardName);
-        socket.send("what-card", { name: cardName, card });
+        const price = new Card().determine(card).price;
+        socket.send("what-card", {
+          name: cardName,
+          price,
+          card,
+        });
       }
 
       if (data === "restart") {

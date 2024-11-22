@@ -1,6 +1,8 @@
 import fs from "fs";
 
 let cardsArray: any[] = [];
+let pricesObject: Record<string, any> = {};
+let scryfallOracleIdToUuid: Record<string, string> = {};
 
 function normalize(input: string) {
   return input
@@ -20,12 +22,46 @@ function fillCardsArray() {
     );
     console.log(`Cards loaded: ${cardsArray.length}`);
   }
+
+  if (Object.keys(pricesObject).length === 0) {
+    const pricesData = fs.readFileSync(
+      "./server/data/AllPricesToday.json",
+      "utf8"
+    );
+    const pricesJson = JSON.parse(pricesData);
+    pricesObject = pricesJson.data;
+    console.log(`Prices loaded: ${Object.keys(pricesObject).length}`);
+  }
+
+  if (Object.keys(scryfallOracleIdToUuid).length === 0) {
+    const scryfallOracleIdToUuidData = fs.readFileSync(
+      "./server/data/AllIdentifiers.json",
+      "utf8"
+    );
+    const json = JSON.parse(scryfallOracleIdToUuidData);
+    scryfallOracleIdToUuid = Object.keys(json.data).reduce((acc, uuid) => {
+      const scryfallOracleId = json.data[uuid].identifiers?.scryfallOracleId;
+      acc[scryfallOracleId] = uuid;
+      return acc;
+    }, {} as Record<string, string>);
+    console.log(
+      `ScryfallOracleIdToUuid loaded: ${
+        Object.keys(scryfallOracleIdToUuid).length
+      }`
+    );
+  }
 }
 
 export function getRandomCardName() {
   fillCardsArray();
 
-  return cardsArray[Math.floor(Math.random() * cardsArray.length)].name;
+  const name = cardsArray[Math.floor(Math.random() * cardsArray.length)].name;
+  console.log("[MOCK] Sending random card:", name);
+  return name;
+}
+
+function getUuid(scryfallOracleId: string) {
+  return scryfallOracleIdToUuid[scryfallOracleId];
 }
 
 export function getCard(cardName: string) {
@@ -33,9 +69,12 @@ export function getCard(cardName: string) {
 
   fillCardsArray();
 
-  return cardsArray.find((card) => {
+  const card = cardsArray.find((card) => {
     try {
-      const names = card.name.split("//").map(normalize);
+      const names = [
+        ...card.name.split("//").map(normalize),
+        normalize(card.name),
+      ];
       return (
         names.includes(normalize(cardName)) ||
         (card.faceName && normalize(card.faceName) === normalize(cardName))
@@ -46,4 +85,27 @@ export function getCard(cardName: string) {
       );
     }
   });
+
+  if (!card) {
+    console.warn("Unable to find card", cardName);
+    return null;
+  }
+
+  console.log("[CARD] Found card:", card.identifiers.scryfallOracleId);
+
+  const uuid = getUuid(card.identifiers.scryfallOracleId);
+
+  const price = pricesObject[uuid];
+  if (price) {
+    card.price = price;
+    console.log("[PRICE] Found price for", uuid, price.paper);
+  } else {
+    console.warn(
+      "[PRICE] No price found for",
+      card.identifiers.scryfallOracleId,
+      uuid
+    );
+  }
+
+  return card;
 }

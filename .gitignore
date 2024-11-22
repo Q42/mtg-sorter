@@ -1,8 +1,11 @@
 data/cards
+data/identifiers
+data/prices
 node_modules
 client/server/data/temp.jpg
-AtomicCards.json
 webapp/server/data/temp.jpg
+AtomicCards.json
+AllIdentifiers.json
 .DS_Store
 .nuxt
 build
