@@ -84,6 +84,17 @@ shell_command_entry     sPumpCommand =
 };
 
 
+shell_command_entry     sStepperArmCommand =
+{
+    "arm",
+    cmd_arm,
+    "arm - Control the arm.",
+    "Usage: arm <state>\r\n"
+    "Arguments: ??",
+    NULL
+};
+
+
 
 void setup()
 {
@@ -105,6 +116,7 @@ void setup()
   shell_register_command( &sHelpCommand );
   shell_register_command( &sHelpShortcut );
   shell_register_command( &sPumpCommand );
+  shell_register_command( &sStepperArmCommand );
 }
 
 void loop()
@@ -115,14 +127,14 @@ void loop()
   neoIndicator.setPixelColor(0, neoIndicator.Color(0, 150, 0));
   neoIndicator.show();
   Serial.println( "Forward" );
-  stepperPlate.step( STEPS_PER_REV );
-  stepperArm.step( STEPS_PER_REV );
+  // stepperPlate.step( STEPS_PER_REV );
+  // stepperArm.step( STEPS_PER_REV/2 );
 
   neoIndicator.setPixelColor(0, neoIndicator.Color(0, 0, 150));
   neoIndicator.show();
   Serial.println( "Backward" );
-  stepperPlate.step( -STEPS_PER_REV );
-  stepperArm.step( -STEPS_PER_REV );
+  // stepperPlate.step( -STEPS_PER_REV );
+  stepperArm.step( 10 );
 #endif
 }
 
@@ -178,6 +190,14 @@ int cmd_vac_pump( int argc, char** argv  )
     digitalWrite(PIN_VAC_PUMP, !u8PumpVal);   // active LOW
 
     return SHELL_RET_SUCCESS;
+}
+
+int cmd_arm( int argc, char** argv) 
+{
+  int8_t     u8PumpVal = 0;
+  u8PumpVal = (int8_t)lEvaluateArg( argv[1], -200, 200, NULL );
+  stepperArm.step( u8PumpVal );
+  return SHELL_RET_SUCCESS;
 }
 
 
