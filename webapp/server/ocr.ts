@@ -2,20 +2,6 @@ import { VertexAI } from "@google-cloud/vertexai";
 import axios from "axios";
 import sharp from "sharp";
 
-export const mockCardList = [
-  "Crippling Blight",
-  "Hag of Mage's Doom",
-  "Elbrus, the Binding Blade",
-  "Forest",
-  "Clinging Mists",
-  "Noble Quarry",
-  "Grimoire of the Dead",
-  "Garruk Relentless",
-  "Garruk, the Veil-Cursed",
-  "Eternity Snare",
-  "Oreskos Sun Guide",
-];
-
 export async function whatCardIsInFrontOfTheCamera(ip: string = "10.71.16.46") {
   const body = (
     await axios({
