@@ -93,6 +93,10 @@ export class Contraption {
       : current;
   }
 
+  get currentPile() {
+    return this.piles[this.currentPileIndex];
+  }
+
   async turnToPile(pileIndex: number) {
     console.log("Turning to pile", pileIndex);
     await this.esp.send("1");
@@ -107,7 +111,7 @@ export class Contraption {
       );
     }
     await this.esp.send("2");
-    this.cardInTheAir = this.piles[this.currentPileIndex].cards.pop();
+    this.cardInTheAir = this.currentPile.cards.pop();
   }
 
   async dropCard() {
@@ -118,7 +122,7 @@ export class Contraption {
     }
 
     await this.esp.send("3");
-    this.piles[this.currentPileIndex].cards.push(this.cardInTheAir);
+    this.currentPile.cards.push(this.cardInTheAir);
     this.cardInTheAir = undefined;
   }
 
@@ -128,7 +132,7 @@ export class Contraption {
     const name = mockCardList[Math.floor(Math.random() * mockCardList.length)]; // TODO FOR NOW
 
     if (!name) {
-      this.piles[this.currentPileIndex].isEmpty();
+      this.currentPile.isEmpty();
       console.log("Pile is empty", this.currentPileIndex);
     } else {
       const cardData = getCard(name);
@@ -136,7 +140,7 @@ export class Contraption {
         console.error("No card data found for", name);
         return;
       }
-      const topCard = this.piles[this.currentPileIndex].topCard;
+      const topCard = this.currentPile.topCard;
       topCard.determine(cardData);
       console.log("Determined: " + topCard.toString());
     }

@@ -16,7 +16,7 @@ export const mockCardList = [
   "Oreskos Sun Guide",
 ];
 
-export async function whatCardIsInFrontOfTheCamera(ip: string = "10.71.16.56") {
+export async function whatCardIsInFrontOfTheCamera(ip: string = "10.71.16.46") {
   const body = (
     await axios({
       url: `http://${ip}/capture`,
