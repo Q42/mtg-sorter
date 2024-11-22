@@ -62,34 +62,34 @@ export default defineNitroPlugin((nitroApp) => {
 
       switch (data) {
         case "pick-up-card":
-          currentContraption.pickUpCard();
+          await currentContraption.pickUpCard();
           break;
         case "drop-card":
-          currentContraption.dropCard();
+          await currentContraption.dropCard();
           break;
         case "determine-card":
           await currentContraption.determineCard();
           break;
         case "turn-to-pile":
-          currentContraption.turnToPile(arg);
+          await currentContraption.turnToPile(arg);
           break;
         case "distribute":
-          currentContraption.determineCard();
+          await currentContraption.determineCard();
           sendContraption();
           await new Promise((r) => setTimeout(r, 500));
-          currentContraption.pickUpCard();
+          await currentContraption.pickUpCard();
           sendContraption();
           await new Promise((r) => setTimeout(r, 500));
           const pile = currentContraption.getPileForColor(
             currentContraption.cardInTheAir?.color
           );
-          currentContraption.turnToPile(pile);
+          await currentContraption.turnToPile(pile);
           sendContraption();
           await new Promise((r) => setTimeout(r, 500));
-          currentContraption.dropCard();
+          await currentContraption.dropCard();
           sendContraption();
           await new Promise((r) => setTimeout(r, 500));
-          currentContraption.turnToPile(0);
+          await currentContraption.turnToPile(0);
           break;
       }
 

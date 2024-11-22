@@ -93,31 +93,31 @@ export class Contraption {
       : current;
   }
 
-  turnToPile(pileIndex: number) {
+  async turnToPile(pileIndex: number) {
     console.log("Turning to pile", pileIndex);
-    this.esp.send("1");
+    await this.esp.send("1");
     this.currentPileIndex = pileIndex;
   }
 
-  pickUpCard() {
+  async pickUpCard() {
     console.log("Picking up card on pile", this.currentPileIndex);
     if (this.cardInTheAir) {
       throw new Error(
         "Already a card in the air. Card: " + this.cardInTheAir.toString()
       );
     }
-    this.esp.send("2");
+    await this.esp.send("2");
     this.cardInTheAir = this.piles[this.currentPileIndex].cards.pop();
   }
 
-  dropCard() {
+  async dropCard() {
     console.log("Dropping card on pile", this.currentPileIndex);
 
     if (!this.cardInTheAir) {
       throw new Error("No card in the air.");
     }
 
-    this.esp.send("3");
+    await this.esp.send("3");
     this.piles[this.currentPileIndex].cards.push(this.cardInTheAir);
     this.cardInTheAir = undefined;
   }

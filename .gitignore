@@ -4,3 +4,5 @@ client/server/data/temp.jpg
 AtomicCards.json
 webapp/server/data/temp.jpg
 .DS_Store
+.nuxt
+build

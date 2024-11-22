@@ -25,8 +25,9 @@ export function getCard(cardName: string) {
 
   return cardsArray.find((card) => {
     try {
+      const names = card.name.split("//").map(normalize);
       return (
-        normalize(card.name) === normalize(cardName) ||
+        names.includes(normalize(cardName)) ||
         (card.faceName && normalize(card.faceName) === normalize(cardName))
       );
     } catch (err) {
