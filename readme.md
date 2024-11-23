@@ -1,4 +1,35 @@
-# Server
+# MTG Sorter
+
+## Running it
+
+open a terminal with 
+
+```
+sudo cu -s 115200 -l /dev/tty.usbserial-57990087871
+```
+
+then reset the thing:
+```
+pause
+```
+
+The power is down, now set the baseplate so the center of container 0 is beneith the section cup.
+And the arm in the lowest position.
+
+```
+home
+arm -50 // get the arm up by turning the arm 90degrees
+```
+
+now you can operate
+```
+plate <nr> // positions of the containers below.
+
+vac 1 // turn on
+vac 0 // turn off
+
+
+```
 
 ## ESP firmware
 
@@ -6,12 +37,14 @@ open Arduino studio, find your port and pick the board "adafruit feather esp32 v
 
 install libraries:
 - Stepper by Arduino
+- AccelStepper by McCauley
 - Adafruit NeoPixel by Adafruit
 - ESP32Servo by Kevin Harrington
 
 ```
 sudo cu -s 115200 -l /dev/tty.usbserial-57990087871
 ```
+
 
 ## Server
 
