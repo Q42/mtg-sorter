@@ -56,6 +56,7 @@ onBeforeUnmount(() => {
     </pre>
 
     <div>
+      <button @click="socket.send('pause')">pause</button>
       <button @click="socket.send('restart')">Reset with cards only in slot 0</button>
       <button @click="socket.send('distribute')">Distribute 1!</button>
       <button @click="socket.send('pick-up-card')">Pick up card</button>
@@ -63,7 +64,7 @@ onBeforeUnmount(() => {
       <button @click="socket.send('determine-card')">Determine card</button>
       <input type="number" v-model="turnToPile" /><button @click="socket.send('turn-to-pile', turnToPile)">Turn to pile</button>
     </div>
-
+    
     <Contraption :contraption="contraption" />
   </div>
 </template>

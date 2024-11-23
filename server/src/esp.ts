@@ -6,7 +6,7 @@ export class ESP {
 
   constructor() {
     this.port = new SerialPort({
-      path: "/dev/tty.usbserial-57990095321",
+      path: "/dev/cu.usbserial-57990087871", //"/dev/tty.usbserial-57990095321",
       baudRate: 115200,
     });
     const parser = this.port.pipe(new ReadlineParser({ delimiter: "\n" }));
@@ -18,14 +18,17 @@ export class ESP {
     });
   }
 
-  send(msg: string) {
+  send(msg: { msg: string }) {
+    // console.log("writing", msg);
     return new Promise((resolve, reject) => {
-      this.port.write(msg, (err) => {
+      // const buffer = Buffer.from(msg, "utf8");
+      // console.log("sending", buffer);
+      this.port.write(msg.msg + "\r\n", (err) => {
         if (err) {
           console.log("[ARDUINO] Error on write: ", err.message);
           reject(err);
         } else {
-          console.log("[ARDUINO] Wrote: " + msg);
+          console.log("[ARDUINO] Wrote: " + msg.msg);
           resolve(msg);
         }
       });

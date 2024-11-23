@@ -47,6 +47,10 @@ export default defineNitroPlugin((nitroApp) => {
         });
       }
 
+      if (data === "pause") {
+        await esp.send("pause");
+      }
+
       if (data === "restart") {
         currentContraption = new Contraption(
           [
@@ -61,6 +65,8 @@ export default defineNitroPlugin((nitroApp) => {
           ],
           esp
         );
+        await esp.send("home");
+        await esp.send("arm -70");
         sendContraption();
       }
 
@@ -88,7 +94,6 @@ export default defineNitroPlugin((nitroApp) => {
           if (!currentContraption.cardInTheAir) {
             await currentContraption.pickUpCard();
             sendContraption();
-            await new Promise((r) => setTimeout(r, 1500));
           }
           const pile = currentContraption.getPileForColor(
             currentContraption.cardInTheAir?.color
@@ -100,7 +105,6 @@ export default defineNitroPlugin((nitroApp) => {
           }
           await currentContraption.dropCard();
           sendContraption();
-          await new Promise((r) => setTimeout(r, 1500));
           await currentContraption.turnToPile(0);
           break;
       }

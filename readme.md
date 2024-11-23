@@ -40,8 +40,17 @@ platenumbers and degrees are increments of 191.5
 5	958
 6	1149
 7	1341
-8	1532
 ```
+
+Now start the servers in multiple terminals.
+But first close your terminal & arduino so the serial connection is available.
+
+```
+cd server && npm run dev
+cd webapp && npm run dev
+```
+
+now open http://localhost:3000
 
 ## ESP firmware
 

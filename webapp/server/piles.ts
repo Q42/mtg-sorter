@@ -7,7 +7,7 @@ export type COLOR = "G" | "U" | "W" | "B" | "R";
 export function getPrice(data: any) {
   const date = "2024-11-21";
   const paper = data?.price?.paper;
-  console.log("paper", paper);
+  // console.log("paper", paper);
   if (!paper) return null;
   const prices: { currency: string; price: number }[] = [];
 
@@ -151,7 +151,11 @@ export class Contraption {
 
   async turnToPile(pileIndex: number) {
     console.log("Turning to pile", pileIndex);
-    await this.esp.send("1");
+
+    let degrees = Math.round(pileIndex * 191.5);
+
+    await this.esp.send("plate " + degrees);
+    await new Promise((r) => setTimeout(r, 3000));
     this.currentPileIndex = pileIndex;
   }
 
@@ -162,7 +166,12 @@ export class Contraption {
         "Already a card in the air. Card: " + this.cardInTheAir.toString()
       );
     }
-    await this.esp.send("2");
+    await this.esp.send("arm 0");
+    await new Promise((r) => setTimeout(r, 1500));
+    await this.esp.send("vac 1");
+    await new Promise((r) => setTimeout(r, 1500));
+    await this.esp.send("arm -90");
+    await new Promise((r) => setTimeout(r, 3000));
     this.cardInTheAir = this.currentPile.cards.pop();
   }
 
@@ -173,7 +182,12 @@ export class Contraption {
       throw new Error("No card in the air.");
     }
 
-    await this.esp.send("3");
+    await this.esp.send("arm 0");
+    await new Promise((r) => setTimeout(r, 3000));
+    await this.esp.send("vac 0");
+    await new Promise((r) => setTimeout(r, 1000));
+    await this.esp.send("arm -90");
+    await new Promise((r) => setTimeout(r, 3000));
     this.currentPile.cards.push(this.cardInTheAir);
     this.cardInTheAir = undefined;
   }

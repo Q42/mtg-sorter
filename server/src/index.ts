@@ -2,7 +2,7 @@ import express, { Application } from "express";
 import cors, { CorsOptions } from "cors";
 import { ESP } from "./esp";
 
-// const esp = new ESP();
+const esp = new ESP();
 
 export default class Server {
   constructor(app: Application) {
@@ -15,7 +15,7 @@ export default class Server {
 
     app.post("/", async (req, res) => {
       console.log("Sending", req.body.msg);
-      // await esp.send(req.body);d
+      await esp.send(req.body);
       res.json({ status: "ok", message: req.body.msg });
     });
   }
