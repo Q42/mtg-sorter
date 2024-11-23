@@ -206,14 +206,18 @@ int cmd_arm( int argc, char** argv)
 {
   int8_t     u8PumpVal = 0;
   u8PumpVal = (int8_t)lEvaluateArg( argv[1], -200, 200, NULL );
+  // Serial.print("arm ");
+  // Serial.println(u8PumpVal);
   stepperArm.step( u8PumpVal );
   return SHELL_RET_SUCCESS;
 }
 
 int cmd_plate( int argc, char** argv) 
 {
-  int8_t     u8PumpVal = 0;
-  u8PumpVal = (int8_t)lEvaluateArg( argv[1], -200, 200, NULL );
+  int32_t     u8PumpVal = 0;
+  u8PumpVal = (int32_t)lEvaluateArg( argv[1], -42000, 42000, NULL );
+  // Serial.print("plate ");
+  // Serial.println(u8PumpVal);
   stepperPlate.step( u8PumpVal );
   return SHELL_RET_SUCCESS;
 }
