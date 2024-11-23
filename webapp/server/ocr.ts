@@ -2,7 +2,7 @@ import { VertexAI } from "@google-cloud/vertexai";
 import axios from "axios";
 import sharp from "sharp";
 
-export async function whatCardIsInFrontOfTheCamera(ip: string = "10.71.16.46") {
+export async function whatCardIsInFrontOfTheCamera(ip: string = "10.71.16.11") {
   const body = (
     await axios({
       url: `http://${ip}/capture`,
@@ -13,14 +13,17 @@ export async function whatCardIsInFrontOfTheCamera(ip: string = "10.71.16.46") {
     throw new Error("No body in response");
   }
 
+  console.log("hallo?");
+
   const file = sharp(body as Buffer);
-  const data1 = file.resize(800);
+  const data1 = file.rotate(180);
 
   // test data
   await data1.toFile("./server/data/temp.jpg");
   console.log("Image gotten from camera and saved to ./server/data/temp.jpg");
 
   const name = await ocrImage((await data1.toBuffer()).toString("base64"));
+  console.log("OCR result:", name);
   return name;
 }
 

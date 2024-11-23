@@ -1,8 +1,8 @@
 <script setup>
-const url = ref('');
+const url = ref("");
 
 setInterval(() => {
-  url.value = `http://10.71.16.46/capture?dt=${Date.now()}`;
+  url.value = `http://10.71.16.11/capture?dt=${Date.now()}`;
 }, 10 * 1000);
 </script>
 

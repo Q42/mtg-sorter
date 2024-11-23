@@ -36,8 +36,8 @@ export default defineNitroPlugin((nitroApp) => {
       console.log("received message", data);
 
       if (data === "what-card") {
-        // const cardName = await whatCardIsInFrontOfTheCamera();
-        const cardName = getRandomCardName();
+        const cardName = await whatCardIsInFrontOfTheCamera();
+        // const cardName = getRandomCardName();
         const card = getCard(cardName);
         const price = new Card().determine(card).price;
         socket.send("what-card", {
@@ -66,7 +66,7 @@ export default defineNitroPlugin((nitroApp) => {
           esp
         );
         await esp.send("home");
-        await esp.send("arm -70");
+        await esp.send("arm -90");
         sendContraption();
       }
 
