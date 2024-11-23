@@ -1,0 +1,55 @@
+{
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Eagle of the Watch\n"
+            }
+          ]
+        },
+        "finishReason": "STOP",
+        "safetyRatings": [
+          {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "probability": "NEGLIGIBLE",
+            "probabilityScore": 0.19314747,
+            "severity": "HARM_SEVERITY_LOW",
+            "severityScore": 0.22541708
+          },
+          {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "probability": "NEGLIGIBLE",
+            "probabilityScore": 0.4087483,
+            "severity": "HARM_SEVERITY_LOW",
+            "severityScore": 0.3956012
+          },
+          {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "probability": "NEGLIGIBLE",
+            "probabilityScore": 0.35042146,
+            "severity": "HARM_SEVERITY_LOW",
+            "severityScore": 0.28696766
+          },
+          {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "probability": "NEGLIGIBLE",
+            "probabilityScore": 0.16885665,
+            "severity": "HARM_SEVERITY_NEGLIGIBLE",
+            "severityScore": 0.13568978
+          }
+        ],
+        "avgLogprobs": -0.22107701301574706,
+        "index": 0
+      }
+    ],
+    "usageMetadata": {
+      "promptTokenCount": 287,
+      "candidatesTokenCount": 5,
+      "totalTokenCount": 292
+    },
+    "modelVersion": "gemini-1.5-flash-002"
+  }
+}
