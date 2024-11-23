@@ -18,7 +18,7 @@ And the arm in the lowest position.
 
 ```
 home
-arm -50 // get the arm up by turning the arm 90degrees
+arm -70 // get the arm up by turning the arm 90degrees
 ```
 
 now you can operate
@@ -27,8 +27,20 @@ plate <nr> // positions of the containers below.
 
 vac 1 // turn on
 vac 0 // turn off
+```
 
+platenumbers and degrees are increments of 191.5
 
+```
+0	0
+1	192
+2	383
+3	575
+4	766
+5	958
+6	1149
+7	1341
+8	1532
 ```
 
 ## ESP firmware
