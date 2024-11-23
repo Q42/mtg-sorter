@@ -194,8 +194,8 @@ export class Contraption {
 
   async determineCard() {
     console.log("Determining card on pile", this.currentPileIndex);
-    // const name = await whatCardIsInFrontOfTheCamera();
-    const name = getRandomCardName(); // TODO FOR NOW
+    const name = await whatCardIsInFrontOfTheCamera();
+    // const name = getRandomCardName(); // TODO FOR NOW
 
     if (!name) {
       this.currentPile.isEmpty();
