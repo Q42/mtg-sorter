@@ -165,7 +165,7 @@ void setup()
   stepperPlate.setMaxSpeed(2000.0);
   stepperPlate.setAcceleration(300.0);
   stepperArm.setMaxSpeed(200.0);
-  stepperArm.setAcceleration(20.0);
+  stepperArm.setAcceleration(100.0);
 
   ESP32PWM::allocateTimer(0);
   servoEnd.attachPin( 21, 50, 10 ); // 50Hz 10 bits
