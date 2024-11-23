@@ -1,7 +1,8 @@
 
 
 #include <Adafruit_NeoPixel.h>
-#include <Stepper.h>
+// #include <Stepper.h>
+#include <AccelStepper.h>
 #include <ESP32Servo.h>
 #include <Shell.h>
 
@@ -13,8 +14,11 @@
 Adafruit_NeoPixel neoIndicator( 1, 0, NEO_GRB + NEO_KHZ800);
 
 // Create the steppers
-Stepper stepperPlate( STEPS_PER_REV, 15, 33, 27, 12 );
-Stepper stepperArm( STEPS_PER_REV, 22, 20, 14, 32 );
+// Stepper stepperPlate( STEPS_PER_REV, 15, 33, 27, 12 );
+// Stepper stepperArm( STEPS_PER_REV, 22, 20, 14, 32 );
+AccelStepper stepperArm(AccelStepper::FULL4WIRE, 22, 20, 14, 32);
+AccelStepper stepperPlate(AccelStepper::FULL4WIRE, 15, 33, 27, 12);
+
 
 ESP32PWM servoEnd;
 
@@ -105,14 +109,39 @@ shell_command_entry     sStepperPlateCommand =
 };
 
 
+shell_command_entry     sPauseCommand =
+{
+    "pause",
+    cmd_pause,
+    "pause - Stop power to steppers.",
+    "Usage: pause\r\n"
+    "Arguments: ??",
+    NULL
+};
+
+shell_command_entry     sHomeCommand =
+{
+    "home",
+    cmd_home,
+    "home - Reset steppers to 0.",
+    "Usage: home\r\n"
+    "Arguments: ??",
+    NULL
+};
+
+
 void setup()
 {
   Serial.begin(115200);
   Serial.println("Stepper test!");
 
   neoIndicator.begin();
-  stepperPlate.setSpeed(30);
-  stepperArm.setSpeed(60);
+  // stepperPlate.setSpeed(30);
+  // stepperArm.setSpeed(60);
+  stepperPlate.setMaxSpeed(2000.0);
+  stepperPlate.setAcceleration(300.0);
+  stepperArm.setMaxSpeed(200.0);
+  stepperArm.setAcceleration(20.0);
 
   ESP32PWM::allocateTimer(0);
   servoEnd.attachPin( 21, 50, 10 ); // 50Hz 10 bits
@@ -127,10 +156,17 @@ void setup()
   shell_register_command( &sPumpCommand );
   shell_register_command( &sStepperArmCommand );
   shell_register_command( &sStepperPlateCommand );
+  shell_register_command( &sPauseCommand );
+  shell_register_command( &sHomeCommand );
+  
+  neoIndicator.setPixelColor(0, neoIndicator.Color(0, 150, 0));
 }
 
 void loop()
 {
+  stepperPlate.run();
+  stepperArm.run();
+
   shell_task();
 
 #if 0
@@ -144,7 +180,7 @@ void loop()
   neoIndicator.show();
   Serial.println( "Backward" );
   // stepperPlate.step( -STEPS_PER_REV );
-  stepperArm.step( 10 );
+  // stepperArm.step( 10 );
 #endif
 }
 
@@ -180,7 +216,6 @@ int cmd_vac_pump( int argc, char** argv  )
 {
     uint8_t     u8PumpVal = 0;
 
-
     if( argc != 2 )
     {
         shell_println(" Command: vac <state>");
@@ -204,24 +239,48 @@ int cmd_vac_pump( int argc, char** argv  )
 
 int cmd_arm( int argc, char** argv) 
 {
-  int8_t     u8PumpVal = 0;
-  u8PumpVal = (int8_t)lEvaluateArg( argv[1], -200, 200, NULL );
-  // Serial.print("arm ");
-  // Serial.println(u8PumpVal);
-  stepperArm.step( u8PumpVal );
+  int16_t     armVal = 0;
+  armVal = (int16_t)lEvaluateArg( argv[1], -1000, 1000, NULL );
+  Serial.print("arm moveTo ");
+  Serial.println(armVal);
+  stepperArm.moveTo( armVal );
   return SHELL_RET_SUCCESS;
 }
 
 int cmd_plate( int argc, char** argv) 
 {
-  int32_t     u8PumpVal = 0;
-  u8PumpVal = (int32_t)lEvaluateArg( argv[1], -42000, 42000, NULL );
-  // Serial.print("plate ");
-  // Serial.println(u8PumpVal);
-  stepperPlate.step( u8PumpVal );
+  int32_t     plateVal = 0;
+  plateVal = (int32_t)lEvaluateArg( argv[1], -2147483647, 2147483647, NULL );
+  Serial.print("plate moveTo ");
+  Serial.println(plateVal);
+  // approx 190 between two plates
+  stepperPlate.moveTo(plateVal);
+
   return SHELL_RET_SUCCESS;
 }
 
+int cmd_pause( int argc, char** argv) 
+{
+  Serial.println("pause");
+
+  stepperPlate.disableOutputs();
+  stepperArm.disableOutputs();
+  
+  return SHELL_RET_SUCCESS;
+}
+
+int cmd_home( int argc, char** argv) 
+{
+  Serial.println("home");
+
+  stepperPlate.enableOutputs();
+  stepperArm.enableOutputs();
+
+  stepperPlate.setCurrentPosition(0);
+  stepperArm.setCurrentPosition(0);
+
+  return SHELL_RET_SUCCESS;
+}
 /******************************************************************************
  * Global functions
  *****************************************************************************/
