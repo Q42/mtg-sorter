@@ -8,7 +8,12 @@
 
 #define STEPS_PER_REV     200
 
-#define PIN_VAC_PUMP      19
+#define PIN_VAC_PUMP        19
+#define PIN_LAMP            21
+#define PINS_STEPPER_ARM    22, 20, 14, 32
+#define PINS_STEPPER_PLATE  15, 33, 27, 12
+#define PIN_PLATE_SENSOR    37
+
 
 // Create the Neopixel indicator
 Adafruit_NeoPixel neoIndicator( 1, 0, NEO_GRB + NEO_KHZ800);
@@ -16,8 +21,8 @@ Adafruit_NeoPixel neoIndicator( 1, 0, NEO_GRB + NEO_KHZ800);
 // Create the steppers
 // Stepper stepperPlate( STEPS_PER_REV, 15, 33, 27, 12 );
 // Stepper stepperArm( STEPS_PER_REV, 22, 20, 14, 32 );
-AccelStepper stepperArm(AccelStepper::FULL4WIRE, 22, 20, 14, 32);
-AccelStepper stepperPlate(AccelStepper::FULL4WIRE, 15, 33, 27, 12);
+AccelStepper stepperArm( AccelStepper::FULL4WIRE, PINS_STEPPER_ARM );
+AccelStepper stepperPlate( AccelStepper::FULL4WIRE, PINS_STEPPER_PLATE );
 
 
 ESP32PWM servoEnd;
@@ -87,6 +92,24 @@ shell_command_entry     sPumpCommand =
     NULL
 };
 
+shell_command_entry     sLampCommand =
+{
+    "lamp",
+    cmd_lamp,
+    "lamp - Control the camera lamp.",
+    "Usage: lamp <state>\r\n"
+    "Arguments: state - Lamp state, either 0 or 1",
+    NULL
+};
+
+shell_command_entry     sPlateSensorCommand =
+{
+    "platesensor",
+    cmd_plateSensor,
+    "platesensor - Display the plate sensor state.",
+    "Usage: platesensor",
+    NULL
+};
 
 shell_command_entry     sStepperArmCommand =
 {
@@ -136,6 +159,7 @@ void setup()
   Serial.println("Stepper test!");
 
   neoIndicator.begin();
+  neoIndicator.setPixelColor(0, neoIndicator.Color(70, 0, 0));
   // stepperPlate.setSpeed(30);
   // stepperArm.setSpeed(60);
   stepperPlate.setMaxSpeed(2000.0);
@@ -149,11 +173,18 @@ void setup()
   pinMode( PIN_VAC_PUMP, OUTPUT );
   digitalWrite( PIN_VAC_PUMP, HIGH );    // Active Low
 
+  pinMode( PIN_LAMP, OUTPUT );
+  digitalWrite( PIN_LAMP, HIGH );         // Active Low
+
+  pinMode( PIN_PLATE_SENSOR, INPUT_PULLUP );
+
   shell_init(shell_reader, shell_writer, 0);
 
   shell_register_command( &sHelpCommand );
   shell_register_command( &sHelpShortcut );
   shell_register_command( &sPumpCommand );
+  shell_register_command( &sLampCommand );
+  shell_register_command( &sPlateSensorCommand );
   shell_register_command( &sStepperArmCommand );
   shell_register_command( &sStepperPlateCommand );
   shell_register_command( &sPauseCommand );
@@ -236,6 +267,34 @@ int cmd_vac_pump( int argc, char** argv  )
 
     return SHELL_RET_SUCCESS;
 }
+
+int cmd_lamp( int argc, char** argv) 
+{
+  uint8_t     u8LampVal = 0;
+  u8LampVal = (uint8_t)lEvaluateArg( argv[1], 0, 1, NULL );
+  Serial.print("Lamp To ");
+  Serial.println(u8LampVal);
+  digitalWrite(PIN_LAMP, !u8LampVal);   // active LOW
+  return SHELL_RET_SUCCESS;
+}
+
+int cmd_plateSensor( int argc, char** argv)
+{
+  shell_println(" Press any key to finish");
+
+  Serial.print( " Sensor: " );
+
+  while( !Serial.available() )
+  {
+    Serial.print( digitalRead( PIN_PLATE_SENSOR ) );
+    Serial.print("\b");
+  }
+
+  (void)Serial.read();    // Consume the key press
+  return SHELL_RET_SUCCESS;  
+}
+
+
 
 int cmd_arm( int argc, char** argv) 
 {
