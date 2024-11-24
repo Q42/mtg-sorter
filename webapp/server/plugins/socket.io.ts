@@ -8,6 +8,79 @@ import { ESP } from "../esp";
 
 let currentContraption: Contraption | undefined;
 
+const pickupCard = async (esp: ESP) => {
+  await esp.send("arm 0");
+  await new Promise((r) => setTimeout(r, 1500));
+  await esp.send("vac 1");
+  await new Promise((r) => setTimeout(r, 1500));
+  await esp.send("arm -90");
+  await new Promise((r) => setTimeout(r, 4500));
+  // await shake(esp);
+};
+
+const shake = async (esp: ESP) => {
+  // repeat 3 times
+  // for (let i = 0; i < 3; i++) {
+  await esp.send("arm -70");
+  await new Promise((r) => setTimeout(r, 500));
+  await esp.send("arm -90");
+  await new Promise((r) => setTimeout(r, 500));
+  await esp.send("arm -70");
+  await new Promise((r) => setTimeout(r, 500));
+  await esp.send("arm -90");
+  await new Promise((r) => setTimeout(r, 500));
+  await esp.send("arm -70");
+  await new Promise((r) => setTimeout(r, 500));
+  await esp.send("arm -90");
+  await new Promise((r) => setTimeout(r, 500));
+  // }
+};
+
+const turnToPile = async (esp: ESP, pileIndex: number) => {
+  let degrees = Math.round(pileIndex * 191.5);
+  await esp.send("plate " + degrees);
+  await new Promise((r) => setTimeout(r, 3000));
+};
+
+const dropCard = async (esp: ESP) => {
+  await esp.send("arm 0");
+  await new Promise((r) => setTimeout(r, 3000));
+  await esp.send("vac 0");
+  await new Promise((r) => setTimeout(r, 1000));
+  await esp.send("arm -90");
+  await new Promise((r) => setTimeout(r, 3000));
+};
+
+const turnToColorPile = async (esp: ESP, color: string) => {
+  if (color === "R") {
+    await turnToPile(esp, 4);
+  } else if (color === "G") {
+    await turnToPile(esp, 1);
+  } else if (color === "U") {
+    await turnToPile(esp, 2);
+  } else if (color === "W") {
+    await turnToPile(esp, 3);
+  } else if (color === "B") {
+    await turnToPile(esp, 5);
+  } else {
+    await turnToPile(esp, 6);
+  }
+};
+
+const sortByColor = async (esp: ESP) => {
+  const cardName = await whatCardIsInFrontOfTheCamera();
+  // const cardName = getRandomCardName();
+  const card = getCard(cardName);
+  if (!card) return;
+
+  const color = new Card().determine(card).color;
+  await pickupCard(esp);
+  await turnToColorPile(esp, color!);
+  await dropCard(esp);
+  await turnToPile(esp, 0);
+  await sortByColor(esp);
+};
+
 export default defineNitroPlugin((nitroApp) => {
   const engine = new Engine();
   const io = new Server();
@@ -49,6 +122,15 @@ export default defineNitroPlugin((nitroApp) => {
 
       if (data === "pause") {
         await esp.send("pause");
+        await esp.send("vac 0");
+      }
+
+      if (data === "light-on") {
+        await esp.send("lamp 1");
+      }
+
+      if (data === "light-off") {
+        await esp.send("lamp 0");
       }
 
       if (data === "restart") {
@@ -66,8 +148,31 @@ export default defineNitroPlugin((nitroApp) => {
           esp
         );
         await esp.send("home");
+        await esp.send("vac 0");
         await esp.send("arm -90");
         sendContraption();
+      }
+
+      if (data === "demo") {
+        console.log("starting demo");
+        await pickupCard(esp);
+        await turnToPile(esp, 4);
+        await dropCard(esp);
+      }
+
+      if (data === "demo-2") {
+        const cardName = await whatCardIsInFrontOfTheCamera();
+        // const cardName = getRandomCardName();
+        const card = getCard(cardName);
+        const color = new Card().determine(card).color;
+        await pickupCard(esp);
+        await turnToColorPile(esp, color!);
+        await dropCard(esp);
+        await turnToPile(esp, 0);
+      }
+
+      if (data === "sort-by-color") {
+        await sortByColor(esp);
       }
 
       if (!currentContraption) return;

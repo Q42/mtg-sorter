@@ -6,7 +6,7 @@
           "role": "model",
           "parts": [
             {
-              "text": "Eagle of the Watch\n"
+              "text": "Trap in Vigor"
             }
           ]
         },
@@ -15,40 +15,40 @@
           {
             "category": "HARM_CATEGORY_HATE_SPEECH",
             "probability": "NEGLIGIBLE",
-            "probabilityScore": 0.19314747,
+            "probabilityScore": 0.150029,
             "severity": "HARM_SEVERITY_LOW",
-            "severityScore": 0.22541708
+            "severityScore": 0.20055786
           },
           {
             "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
             "probability": "NEGLIGIBLE",
-            "probabilityScore": 0.4087483,
-            "severity": "HARM_SEVERITY_LOW",
-            "severityScore": 0.3956012
+            "probabilityScore": 0.45907643,
+            "severity": "HARM_SEVERITY_MEDIUM",
+            "severityScore": 0.5101916
           },
           {
             "category": "HARM_CATEGORY_HARASSMENT",
             "probability": "NEGLIGIBLE",
-            "probabilityScore": 0.35042146,
+            "probabilityScore": 0.34422323,
             "severity": "HARM_SEVERITY_LOW",
-            "severityScore": 0.28696766
+            "severityScore": 0.2917871
           },
           {
             "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
             "probability": "NEGLIGIBLE",
-            "probabilityScore": 0.16885665,
+            "probabilityScore": 0.17895599,
             "severity": "HARM_SEVERITY_NEGLIGIBLE",
-            "severityScore": 0.13568978
+            "severityScore": 0.079210214
           }
         ],
-        "avgLogprobs": -0.22107701301574706,
+        "avgLogprobs": -0.0012379898689687252,
         "index": 0
       }
     ],
     "usageMetadata": {
       "promptTokenCount": 287,
-      "candidatesTokenCount": 5,
-      "totalTokenCount": 292
+      "candidatesTokenCount": 4,
+      "totalTokenCount": 291
     },
     "modelVersion": "gemini-1.5-flash-002"
   }

@@ -161,11 +161,11 @@ export class Contraption {
 
   async pickUpCard() {
     console.log("Picking up card on pile", this.currentPileIndex);
-    if (this.cardInTheAir) {
-      throw new Error(
-        "Already a card in the air. Card: " + this.cardInTheAir.toString()
-      );
-    }
+    // if (this.cardInTheAir) {
+    //   throw new Error(
+    //     "Already a card in the air. Card: " + this.cardInTheAir.toString()
+    //   );
+    // }
     await this.esp.send("arm 0");
     await new Promise((r) => setTimeout(r, 1500));
     await this.esp.send("vac 1");
