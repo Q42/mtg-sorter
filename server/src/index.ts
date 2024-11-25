@@ -2,21 +2,24 @@ import express, { Application } from "express";
 import cors, { CorsOptions } from "cors";
 import { ESP } from "./esp";
 
-const esp = new ESP();
-
 export default class Server {
+  esp: ESP | undefined;
+
   constructor(app: Application) {
     this.config(app);
 
-    app.get("/:msg", async (req, res) => {
-      // await esp.send(req.params.msg);
-      res.json({ status: "ok", message: req.params.msg });
-    });
+    this.esp = new ESP();
 
     app.post("/", async (req, res) => {
       console.log("Sending", req.body.msg);
-      await esp.send(req.body);
-      res.json({ status: "ok", message: req.body.msg });
+      if (this.esp) {
+        await this.esp.send(req.body);
+      }
+      res.json({
+        status: "ok",
+        message: req.body.msg,
+        sentToDevice: !!this.esp,
+      });
     });
   }
 
