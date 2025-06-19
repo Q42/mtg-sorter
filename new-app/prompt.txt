@@ -1,0 +1,10 @@
+You are an expert in Magic: The Gathering.
+
+Look at the attached image, which shows the **top part of a Magic card** (including the card name and artwork). Identify the **exact name of the card** based on the visible title and image.
+
+Respond only with a JSON object in this format:
+
+```json
+{
+  "name": "Exact Card Name"
+}

@@ -102,7 +102,7 @@ void setup() {
     s->set_framesize(s, FRAMESIZE_QVGA);
   }
 
-#if defined(CAMERA_MODEL_M5STACK_WIDE) || defined(CAMERA_MODEL_M5STACK_ESP32CAM)
+#if defined(CAMERA_MODEL_M5STACK_WIDE) || defined(CAMERA_MODEL_M5STACK_ESP32CAM) || defined(CAMERA_MODEL_XIAO_ESP32S3)
   s->set_vflip(s, 1);
   s->set_hmirror(s, 1);
 #endif

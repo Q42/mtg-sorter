@@ -1,0 +1,3 @@
+What is the exact name of the Magic: The Gathering card shown in the image?
+
+Only reply with the name of the card. If you don’t know, reply: “Unknown”.

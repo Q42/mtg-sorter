@@ -1,4 +1,5 @@
 import fs from "fs";
+import * as Scry from "scryfall-sdk";
 
 let cardsArray: any[] = [];
 let pricesObject: Record<string, any> = {};
@@ -64,47 +65,52 @@ function getUuid(scryfallOracleId: string) {
   return scryfallOracleIdToUuid[scryfallOracleId];
 }
 
-export function getCard(cardName: string) {
+export async function getCard(cardName: string) {
   if (!cardName) return null;
 
-  fillCardsArray();
+  // fillCardsArray();
 
-  const card = cardsArray.find((card) => {
-    try {
-      const names = [
-        ...card.name.split("//").map(normalize),
-        normalize(card.name),
-      ];
-      return (
-        names.includes(normalize(cardName)) ||
-        (card.faceName && normalize(card.faceName) === normalize(cardName))
-      );
-    } catch (err) {
-      throw new Error(
-        "Unable to find card " + cardName + " in " + JSON.stringify(card)
-      );
-    }
-  });
+  // const card = cardsArray.find((card) => {
+  //   try {
+  //     const names = [
+  //       ...card.name.split("//").map(normalize),
+  //       normalize(card.name),
+  //     ];
+  //     return (
+  //       names.includes(normalize(cardName)) ||
+  //       (card.faceName && normalize(card.faceName) === normalize(cardName))
+  //     );
+  //   } catch (err) {
+  //     throw new Error(
+  //       "Unable to find card " + cardName + " in " + JSON.stringify(card)
+  //     );
+  //   }
+  // });
+
+  const cards = await Scry.Cards.search(cardName).waitForAll();
+  if (cards.length === 0) {
+    console.warn("Unable to find cardd", cardName);
+    return null;
+  }
+  const card = cards[0];
+  console.log("found card", card);
+  // const card = results.length > 0 ? results[0] : null;
 
   if (!card) {
     console.warn("Unable to find card", cardName);
     return null;
   }
 
-  console.log("[CARD] Found card:", card.identifiers.scryfallOracleId);
+  console.log("[CARD] Found card:", card.id);
 
-  const uuid = getUuid(card.identifiers.scryfallOracleId);
+  const uuid = card.id;
 
   const price = pricesObject[uuid];
   if (price) {
-    card.price = price;
+    // card.price = price;
     console.log("[PRICE] Found price for", uuid, price.paper);
   } else {
-    console.warn(
-      "[PRICE] No price found for",
-      card.identifiers.scryfallOracleId,
-      uuid
-    );
+    console.warn("[PRICE] No price found for", card.id, uuid);
   }
 
   return card;

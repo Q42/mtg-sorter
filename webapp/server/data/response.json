@@ -6,7 +6,7 @@
           "role": "model",
           "parts": [
             {
-              "text": "Trap in Vigor"
+              "text": "Goblin Matron"
             }
           ]
         },
@@ -15,40 +15,40 @@
           {
             "category": "HARM_CATEGORY_HATE_SPEECH",
             "probability": "NEGLIGIBLE",
-            "probabilityScore": 0.150029,
-            "severity": "HARM_SEVERITY_LOW",
-            "severityScore": 0.20055786
+            "probabilityScore": 0.15405777,
+            "severity": "HARM_SEVERITY_NEGLIGIBLE",
+            "severityScore": 0.1623801
           },
           {
             "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
             "probability": "NEGLIGIBLE",
-            "probabilityScore": 0.45907643,
-            "severity": "HARM_SEVERITY_MEDIUM",
-            "severityScore": 0.5101916
+            "probabilityScore": 0.25982565,
+            "severity": "HARM_SEVERITY_LOW",
+            "severityScore": 0.31912184
           },
           {
             "category": "HARM_CATEGORY_HARASSMENT",
             "probability": "NEGLIGIBLE",
-            "probabilityScore": 0.34422323,
+            "probabilityScore": 0.31320974,
             "severity": "HARM_SEVERITY_LOW",
-            "severityScore": 0.2917871
+            "severityScore": 0.27904204
           },
           {
             "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
             "probability": "NEGLIGIBLE",
-            "probabilityScore": 0.17895599,
+            "probabilityScore": 0.1431879,
             "severity": "HARM_SEVERITY_NEGLIGIBLE",
-            "severityScore": 0.079210214
+            "severityScore": 0.10374877
           }
         ],
-        "avgLogprobs": -0.0012379898689687252,
+        "avgLogprobs": -0.5480157931645712,
         "index": 0
       }
     ],
     "usageMetadata": {
       "promptTokenCount": 287,
-      "candidatesTokenCount": 4,
-      "totalTokenCount": 291
+      "candidatesTokenCount": 3,
+      "totalTokenCount": 290
     },
     "modelVersion": "gemini-1.5-flash-002"
   }

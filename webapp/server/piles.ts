@@ -170,7 +170,7 @@ export class Contraption {
     await new Promise((r) => setTimeout(r, 1500));
     await this.esp.send("vac 1");
     await new Promise((r) => setTimeout(r, 1500));
-    await this.esp.send("arm -90");
+    await this.esp.send("arm -140");
     await new Promise((r) => setTimeout(r, 3000));
     this.cardInTheAir = this.currentPile.cards.pop();
   }
@@ -186,7 +186,7 @@ export class Contraption {
     await new Promise((r) => setTimeout(r, 3000));
     await this.esp.send("vac 0");
     await new Promise((r) => setTimeout(r, 1000));
-    await this.esp.send("arm -90");
+    await this.esp.send("arm -140");
     await new Promise((r) => setTimeout(r, 3000));
     this.currentPile.cards.push(this.cardInTheAir);
     this.cardInTheAir = undefined;

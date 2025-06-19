@@ -72,7 +72,7 @@ onBeforeUnmount(() => {
       <button @click="socket.send('distribute')">Distribute 1!</button>
       <button @click="socket.send('pick-up-card')">Pick up card</button><br />
       <button @click="socket.send('drop-card')">Drop card</button>
-      <button @click="socket.send('determine-card')">Determine card</button>
+      <button @click="socket.send('what-card')">Determine card</button>
       <button @click="socket.send('light-on')">light on</button>
       <button @click="socket.send('light-off')">light off</button>
       <input type="number" v-model="turnToPile" /><button

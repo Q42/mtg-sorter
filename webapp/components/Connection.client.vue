@@ -2,13 +2,13 @@
 const url = ref("");
 
 setInterval(() => {
-  url.value = `http://10.71.16.11/capture?dt=${Date.now()}`;
-}, 10 * 1000);
+  url.value = `http://192.168.178.61/capture?dt=${Date.now()}`;
+}, 1000);
 </script>
 
 <template>
   <div id="preview">
-    <img :src="url" crossorigin id="stream" width="400" />
+    <img :src="url" crossorigin id="stream" width="400" class="rotated" />
   </div>
 </template>
 
@@ -17,5 +17,9 @@ setInterval(() => {
   position: fixed;
   top: 0;
   right: 0;
+}
+
+.rotated {
+  transform: rotate(180deg);
 }
 </style>

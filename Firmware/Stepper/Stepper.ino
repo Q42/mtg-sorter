@@ -335,11 +335,17 @@ int cmd_home( int argc, char** argv)
   stepperPlate.enableOutputs();
   stepperArm.enableOutputs();
 
-  stepperPlate.setCurrentPosition(0);
-  stepperArm.setCurrentPosition(0);
+  int8_t dontReset = 0;
+  dontReset = (int8_t)lEvaluateArg( argv[1], 0, 1, NULL );
 
+  if (dontReset == 0) {
+    stepperPlate.setCurrentPosition(0);
+    stepperArm.setCurrentPosition(0);
+  }
+  
   return SHELL_RET_SUCCESS;
 }
+
 /******************************************************************************
  * Global functions
  *****************************************************************************/
